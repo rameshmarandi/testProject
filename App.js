@@ -7,6 +7,7 @@ const App = () => {
     <View>
       <Text>App</Text>
       <ButtonSection/>
+      <Text>Tested</Text>
     </View>
   )
 }
