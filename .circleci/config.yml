@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Set JAVA_HOME
           command: |
-            export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
             echo "JAVA_HOME=$JAVA_HOME" >> $BASH_ENV
             source $BASH_ENV
       - run:
