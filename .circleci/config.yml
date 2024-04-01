@@ -2,12 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/android:api-30-node
+      - image: circleci/node:16
     steps:
       - checkout
-      - run:
-          name: Set JAVA_HOME
-          command: export JAVA_HOME=$(/usr/libexec/java_home)
       - run:
           name: Check Node.js Version
           command: node -v
