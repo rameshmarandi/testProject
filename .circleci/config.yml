@@ -1,25 +1,32 @@
-version: 2.1
-
-workflows:
-  build-and-test:  # Name of the workflow
-
-    jobs:
-      - build-android-app  # Job name
-
+version: 2
 jobs:
-  build-android-app:
+  build:
     docker:
-      - image: circleci/android:api-33
-
+      - image: circleci/android:api-30-node
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Build APK
+          command: |
+            cd android
+            ./gradlew assembleRelease
+      - store_artifacts:
+          path: android/app/build/outputs/apk/release/
+          destination: release-apk/
 
-      # Install dependencies (if not using Orb)
-      # - run: npm install
-
-      # Build the APK (using Orb - recommended)
-      - react-native/android_build:
-          path: ./android  # Path to your Android project directory
-
-      # Build the APK (without Orb)
-      # - run: cd android && ./gradlew assembleRelease
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
