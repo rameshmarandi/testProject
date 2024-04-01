@@ -3,10 +3,14 @@ jobs:
   build:
     docker:
       - image: circleci/node:16
-    environment:
-      JAVA_HOME:/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home  # Set the JAVA_HOME based on the output /usr/bin/java
     steps:
       - checkout
+      - run:
+          name: Set JAVA_HOME
+          command: |
+            export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+            echo "JAVA_HOME=$JAVA_HOME" >> $BASH_ENV
+            source $BASH_ENV
       - run:
           name: Check Node.js Version
           command: node -v
