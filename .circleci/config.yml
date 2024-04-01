@@ -3,10 +3,11 @@ jobs:
   build:
     docker:
       - image: circleci/android:api-30-node
-    environment:
-      JAVA_HOME: /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
     steps:
       - checkout
+      - run:
+          name: Set JAVA_HOME
+          command: export JAVA_HOME=$(/usr/libexec/java_home)
       - run:
           name: Check Node.js Version
           command: node -v
