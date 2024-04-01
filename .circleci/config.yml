@@ -1,13 +1,12 @@
-version: 2.1
-
+version: 2
 jobs:
   build:
-    macos:
-      xcode: latest
+    docker:
+      - image: circleci/node:16
+   
     steps:
       - checkout
-
-      - run:
+        - run:
           name: Install Java
           command: |
             brew tap AdoptOpenJDK/openjdk
@@ -15,34 +14,34 @@ jobs:
             echo 'export JAVA_HOME="/Library/Java/JavaVirtualMachines/adoptopenjdk-17.jdk/Contents/Home"' >> $BASH_ENV
             echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
             source $BASH_ENV
-
       - run:
-          name: Validate Gradle wrapper
-          command: ./gradlew --version
-
+          name: Check Node.js Version
+          command: node -v
       - run:
-          name: Setup Node.js
+          name: Clear npm Cache
+          command: npm cache clean --force
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
           command: |
-            brew install node@18
-            echo 'export PATH="/usr/local/opt/node@18/bin:$PATH"' >> $BASH_ENV
-            source $BASH_ENV
-
+            npm install --verbose
+            npm install react-native --verbose
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run:
-          name: Install Yarn and dependencies
-          command: |
-            npm install -g corepack
-            yarn install
-
-      - run:
-          name: Build application
+          name: Build APK
           command: |
             cd android
+            chmod +x gradlew
             ./gradlew assembleRelease
-
-      - persist_to_workspace:
-          root: android/app/build/outputs/apk/release
-          paths:
-            - app-release.apk
+      - store_artifacts:
+          path: android/app/build/outputs/apk/release/
+          destination: release-apk/
 
 workflows:
   version: 2
