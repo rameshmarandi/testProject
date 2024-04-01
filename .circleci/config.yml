@@ -50,10 +50,7 @@ jobs:
       - run:
           name: Set local.properties
           command: |
-            if [ ! -f android/local.properties ]; then
-              echo 'sdk.dir=/opt/android' > android/local.properties
-              echo 'Local properties file created. Please specify the SDK location by setting sdk.dir=/path/to/android/sdk in this file.' >&2
-            fi
+            echo 'sdk.dir=/opt/android' > android/local.properties
 
       - run:
           name: Build APK
