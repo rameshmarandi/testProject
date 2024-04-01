@@ -6,6 +6,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Set JAVA_HOME
+          command: export JAVA_HOME=$(/usr/libexec/java_home)
+      - run:
           name: Check Node.js Version
           command: node -v
       - run:
