@@ -52,6 +52,8 @@ jobs:
           command: |
             if [ ! -f android/local.properties ]; then
               echo 'sdk.dir=/opt/android' > android/local.properties
+              echo 'Local properties file created. Please specify the SDK location by setting sdk.dir=/path/to/android/sdk in this file.' >&2
+              exit 1
             fi
 
       - run:
