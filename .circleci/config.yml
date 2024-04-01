@@ -3,7 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/node:16
-   
+    environment:
+      ANDROID_HOME: $HOME/android/sdk
+      PATH: $ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
     steps:
       - checkout
      
