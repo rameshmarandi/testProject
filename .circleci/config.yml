@@ -50,7 +50,9 @@ jobs:
       - run:
           name: Set local.properties
           command: |
-            echo 'sdk.dir=/opt/android' > android/local.properties
+            if [ ! -f android/local.properties ]; then
+              echo 'sdk.dir=/opt/android' > android/local.properties
+            fi
 
       - run:
           name: Build APK
