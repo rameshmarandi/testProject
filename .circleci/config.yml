@@ -28,8 +28,7 @@ jobs:
           name: Build APK
           command: |
             cd android
-            chmod +x gradlew
-            ./gradlew assembleRelease
+            ./gradlew assembleRelease  # Execute gradlew script without chmod +x
       - store_artifacts:
           path: android/app/build/outputs/apk/release/
           destination: release-apk/
