@@ -3,11 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:16
+    environment:
+      JAVA_HOME: /usr  # Set the JAVA_HOME based on the output /usr/bin/java
     steps:
       - checkout
-       environment:
-      JAVA_HOME: /usr/bin/java # Update this path with your Java home directory
-   
       - run:
           name: Check Node.js Version
           command: node -v
