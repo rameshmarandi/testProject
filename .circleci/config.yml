@@ -1,5 +1,11 @@
 version: 2.1
 
+workflows:
+  build-and-test:  # Name of the workflow
+
+    jobs:
+      - build-android-app  # Job name
+
 jobs:
   build-android-app:
     docker:
@@ -17,4 +23,3 @@ jobs:
 
       # Build the APK (without Orb)
       # - run: cd android && ./gradlew assembleRelease
-
