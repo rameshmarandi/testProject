@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Set JAVA_HOME
-      command: |
+          command: |
             JAVA_HOME=$(/usr/libexec/java_home)
             echo "JAVA_HOME=$JAVA_HOME" >> $BASH_ENV
             export JAVA_HOME
