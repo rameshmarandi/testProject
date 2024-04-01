@@ -2,7 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:16
+      - image: circleci/android:api-30-node
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64  # Adjust the path as per your Java installation
     steps:
       - checkout
       - run:
