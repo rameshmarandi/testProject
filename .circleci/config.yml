@@ -2,9 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/android:api-30-node
+      - image: circleci/node:16
     steps:
       - checkout
+      - run:
+          name: Check Node.js Version
+          command: node -v
+      - run:
+          name: Clear npm Cache
+          command: npm cache clean --force
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
