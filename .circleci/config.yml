@@ -3,14 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:16
+    environment:
+      JAVA_HOME: /usr/bin/java  # Replace this with the path you've set
     steps:
       - checkout
-      - run:
-          name: Set JAVA_HOME
-          command: |
-            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
-            echo "JAVA_HOME=$JAVA_HOME" >> $BASH_ENV
-            source $BASH_ENV
       - run:
           name: Check Node.js Version
           command: node -v
