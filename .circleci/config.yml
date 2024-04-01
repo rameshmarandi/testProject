@@ -8,59 +8,66 @@ jobs:
       - checkout
 
       - run:
-          name: Set Android SDK Location
-          command: |
-            echo 'export ANDROID_HOME=/opt/android' >> $BASH_ENV
-            echo 'export PATH="$ANDROID_HOME/tools:$PATH:$ANDROID_HOME/platform-tools"' >> $BASH_ENV
+        name: Set Android SDK Location (if not set)
+        command: |
+          if [ -z "$ANDROID_HOME" ]; then
+            ANDROID_HOME=/opt/android # Replace with your expected path
+            export ANDROID_HOME
+            echo 'export ANDROID_HOME='$ANDROID_HOME >> $BASH_ENV
             source $BASH_ENV
+          fi
 
       - run:
-          name: Check Node.js Version
-          command: node -v
+        name: Check ANDROID_HOME
+        command: echo $ANDROID_HOME
 
       - run:
-          name: Clear npm Cache
-          command: npm cache clean --force
+        name: Check Node.js Version
+        command: node -v
 
       - run:
-          name: Install Java
-          command: |
-            sudo apt-get update
-            sudo apt-get install default-jdk -y
-            echo 'export JAVA_HOME=/usr/lib/jvm/default-java' >> $BASH_ENV
-            echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
-            source $BASH_ENV
+        name: Clear npm Cache
+        command: npm cache clean --force
+
+      - run:
+        name: Install Java
+        command: |
+          sudo apt-get update
+          sudo apt-get install default-jdk -y
+          echo 'export JAVA_HOME=/usr/lib/jvm/default-java' >> $BASH_ENV
+          echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
+          source $BASH_ENV
 
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+        keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
 
       - run:
-          name: Install Dependencies
-          command: |
-            npm install --verbose
-            npm install react-native --verbose
+        name: Install Dependencies
+        command: |
+          npm install --verbose
+          npm install react-native --verbose
 
       - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: Set local.properties
-          command: echo 'sdk.dir=/opt/android' > android/local.properties
+        name: Set local.properties
+        command: echo 'sdk.dir=/opt/android' > android/local.properties  # Double-check this path
 
       - run:
-          name: Build APK
-          command: |
-            cd android
-            chmod +x gradlew
-            ./gradlew assembleRelease
+        name: Build APK
+        command: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease
 
       - store_artifacts:
-          path: android/app/build/outputs/apk/release/
-          destination: release-apk/
+        path: android/app/build/outputs/apk/release/
+        destination: release-apk/
 
 workflows:
   version: 2
