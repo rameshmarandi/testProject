@@ -3,14 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:16
+    environment:
+      JAVA_HOME: /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home  # Update this path with your Java home directory
     steps:
       - checkout
-      - run:
-          name: Set JAVA_HOME
-          command: |
-            JAVA_HOME=$(/usr/libexec/java_home)
-            echo "JAVA_HOME=$JAVA_HOME" >> $BASH_ENV
-            export JAVA_HOME
       - run:
           name: Check Node.js Version
           command: node -v
