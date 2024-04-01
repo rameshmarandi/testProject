@@ -6,14 +6,7 @@ jobs:
    
     steps:
       - checkout
-      
-      - run:
-          name: Set Android SDK Location
-          command: |
-            echo 'export ANDROID_HOME=/opt/android' >> $BASH_ENV
-            echo 'export PATH="$ANDROID_HOME/tools:$PATH:$ANDROID_HOME/platform-tools"' >> $BASH_ENV
-            source $BASH_ENV
-
+     
       - run:
           name: Check Node.js Version
           command: node -v
@@ -45,8 +38,8 @@ jobs:
           name: Build APK
           command: |
             cd android
-           
-            "./gradlew assembleRelease"
+            chmod +x gradlew
+            ./gradlew assembleRelease
       - store_artifacts:
           path: android/app/build/outputs/apk/release/
           destination: release-apk/
