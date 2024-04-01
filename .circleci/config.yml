@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: circleci/node:16
     environment:
-      JAVA_HOME: /usr  # Set the JAVA_HOME based on the output /usr/bin/java
+      JAVA_HOME:/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home  # Set the JAVA_HOME based on the output /usr/bin/java
     steps:
       - checkout
       - run:
