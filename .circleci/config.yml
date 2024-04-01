@@ -1,41 +1,46 @@
-version: 2
+name: "Build Android app"
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build:
-    docker:
-      - image: circleci/node:16
+    runs-on: macos-latest
     steps:
-      - checkout
-      - run:
-          name: Check Node.js Version
-          command: node -v
-      - run:
-          name: Clear npm Cache
-          command: npm cache clean --force
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run:
-          name: Install Dependencies
-          command: |
-            npm install --verbose
-            npm install react-native --verbose
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: Build APK
-          command: |
-            cd android
-            chmod +x gradlew
-            ./gradlew assembleRelease
-      - store_artifacts:
-          path: android/app/build/outputs/apk/release/
-          destination: release-apk/
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: adopt
+          cache: gradle
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Node  
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Run Yarn Install
+        run: |
+             npm i -g corepack
+             yarn install
+
+      - name: Build application
+        run: |
+             cd android
+             ./gradlew assembleRelease
+
+      - name: Upload application
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 3
