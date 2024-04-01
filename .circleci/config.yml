@@ -11,7 +11,9 @@ jobs:
             - v1-dependencies-
       - run:
           name: Install Dependencies
-          command: npm install
+          command: |
+            npm install --verbose
+            npm install react-native --verbose
       - save_cache:
           paths:
             - node_modules
@@ -20,6 +22,7 @@ jobs:
           name: Build APK
           command: |
             cd android
+            chmod +x gradlew
             ./gradlew assembleRelease
       - store_artifacts:
           path: android/app/build/outputs/apk/release/
