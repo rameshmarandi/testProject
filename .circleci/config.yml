@@ -13,6 +13,14 @@ jobs:
       - run:
           name: Clear npm Cache
           command: npm cache clean --force
+      - run:
+          name: Install Java
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-jdk -y
+            echo 'export JAVA_HOME=/usr/lib/jvm/default-java' >> $BASH_ENV
+            echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
