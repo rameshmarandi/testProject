@@ -1,3 +1,7 @@
+## local.properties
+sdk.dir=/opt/android
+
+## Config.yml
 version: 2
 jobs:
   build:
@@ -6,7 +10,7 @@ jobs:
    
     steps:
       - checkout
-     
+      
       - run:
           name: Check Node.js Version
           command: node -v
@@ -39,7 +43,7 @@ jobs:
           command: |
             cd android
             chmod +x gradlew
-            ./gradlew assembleRelease
+           ./gradlew assembleRelease
       - store_artifacts:
           path: android/app/build/outputs/apk/release/
           destination: release-apk/
