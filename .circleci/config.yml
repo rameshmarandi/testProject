@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:16
-    environment:
-      JAVA_HOME: /usr/bin/java # Replace this with the path you've set
     steps:
       - checkout
       - run:
