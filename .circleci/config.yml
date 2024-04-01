@@ -1,46 +1,51 @@
-name: "Build Android app"
-
-on:
-  push:
-    branches:
-      - main
+version: 2.1
 
 jobs:
   build:
-    runs-on: macos-latest
+    macos:
+      xcode: latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - checkout
 
-      - name: Install Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: adopt
-          cache: gradle
+      - run:
+          name: Install Java
+          command: |
+            brew tap AdoptOpenJDK/openjdk
+            brew install --cask adoptopenjdk17
+            echo 'export JAVA_HOME="/Library/Java/JavaVirtualMachines/adoptopenjdk-17.jdk/Contents/Home"' >> $BASH_ENV
+            echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+      - run:
+          name: Validate Gradle wrapper
+          command: ./gradlew --version
 
-      - name: Setup Node  
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'yarn'
+      - run:
+          name: Setup Node.js
+          command: |
+            brew install node@18
+            echo 'export PATH="/usr/local/opt/node@18/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
 
-      - name: Run Yarn Install
-        run: |
-             npm i -g corepack
-             yarn install
+      - run:
+          name: Install Yarn and dependencies
+          command: |
+            npm install -g corepack
+            yarn install
 
-      - name: Build application
-        run: |
-             cd android
-             ./gradlew assembleRelease
+      - run:
+          name: Build application
+          command: |
+            cd android
+            ./gradlew assembleRelease
 
-      - name: Upload application
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 3
+      - persist_to_workspace:
+          root: android/app/build/outputs/apk/release
+          paths:
+            - app-release.apk
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
