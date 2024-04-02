@@ -14,10 +14,10 @@ def applyNativeModulesSettingsGradleMethod = {
 }
 
 // Apply native modules settings if available
-if (project.hasProperty("settings")) {
+if (project.hasProperty("settingsDir")) {
     applyNativeModulesSettingsGradleMethod()
 } else {
-    // In case settings object is not available yet, defer applying settings
+    // In case settingsDir property is not available yet, defer applying settings
     gradle.projectsEvaluated {
         applyNativeModulesSettingsGradleMethod()
     }
