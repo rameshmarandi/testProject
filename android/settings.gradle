@@ -1,40 +1,8 @@
-// settings.gradle
-
 rootProject.name = 'RNTest'
-
-// Check if settingsDir property is defined before applying native modules settings
-def applyNativeModulesSettingsGradleMethod = {
-    try {
-        apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
-        applyNativeModulesSettingsGradle(settings)
-    } catch (e) {
-        // Handle error if applyNativeModulesSettingsGradle() is not found
-        println "Warning: applyNativeModulesSettingsGradle() method not found. Skipping..."
-    }
-}
-
-// Apply native modules settings if settingsDir property is available
-if (settingsDir != null) {
-    applyNativeModulesSettingsGradleMethod()
-} else {
-    // In case settingsDir property is not available yet, defer applying settings
-    gradle.projectsEvaluated {
-        applyNativeModulesSettingsGradleMethod()
-    }
-}
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')
 
-// Include build if directory exists, otherwise create a placeholder directory
-def gradlePluginDir = new File(settingsDir, '../node_modules/@react-native/gradle-plugin')
-if (gradlePluginDir.exists()) {
-    includeBuild(gradlePluginDir)
-} else {
-    println "Warning: Directory '$gradlePluginDir' does not exist. Creating a placeholder directory..."
-    def placeholderDir = new File(settingsDir, 'placeholder')
-    placeholderDir.mkdirs()
-    includeBuild(placeholderDir)
-}
-
 include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')
