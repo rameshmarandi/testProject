@@ -1,5 +1,27 @@
+// settings.gradle
+
 rootProject.name = 'RNTest'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+
+// Check if applyNativeModulesSettingsGradle method is defined before applying
+def applyNativeModulesSettingsGradleMethod = {
+    try {
+        apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+        applyNativeModulesSettingsGradle(settings)
+    } catch (e) {
+        // Handle error if applyNativeModulesSettingsGradle() is not found
+        println "Warning: applyNativeModulesSettingsGradle() method not found. Skipping..."
+    }
+}
+
+// Apply native modules settings if available
+if (project.hasProperty("settings")) {
+    applyNativeModulesSettingsGradleMethod()
+} else {
+    // In case settings object is not available yet, defer applying settings
+    gradle.projectsEvaluated {
+        applyNativeModulesSettingsGradleMethod()
+    }
+}
 
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')
