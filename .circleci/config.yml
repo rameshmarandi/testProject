@@ -1,132 +1,81 @@
-# version: 2
-# jobs:
-#   build:
-#     docker:
-#       - image: circleci/node:16
-
-#     steps:
-#       - checkout
-
-#       - run:
-#           name: Set Android SDK Location
-#           command: |
-#             echo 'export ANDROID_HOME=/opt/android' >> $BASH_ENV
-#             echo 'export PATH="$ANDROID_HOME/tools:$PATH:$ANDROID_HOME/platform-tools"' >> $BASH_ENV
-#             source $BASH_ENV
-
-#       - run:
-#           name: Check Node.js Version
-#           command: node -v
-
-#       - run:
-#           name: Clear npm Cache
-#           command: npm cache clean --force
-
-#       - run:
-#           name: Install Java
-#           command: |
-#             sudo apt-get update
-#             sudo apt-get install default-jdk -y
-#             echo 'export JAVA_HOME=/usr/lib/jvm/default-java' >> $BASH_ENV
-#             echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
-#             source $BASH_ENV
-
-#       - restore_cache:
-#           keys:
-#             - v1-dependencies-{{ checksum "package.json" }}
-#             - v1-dependencies-
-
-#       - run:
-#           name: Install Dependencies
-#           command: |
-#             npm install --verbose
-#             npm install react-native --verbose
-
-#       - save_cache:
-#           paths:
-#             - node_modules
-#           key: v1-dependencies-{{ checksum "package.json" }}
-
-#       - run:
-#           name: Set local.properties
-#           command: |
-#             if [ ! -f android/local.properties ]; then
-#               echo 'sdk.dir=/opt/android' > android/local.properties
-#               echo 'Local properties file created. Please specify the SDK location by setting sdk.dir=/path/to/android/sdk in this file.' >&2
-#             fi
-
-#       - run:
-#           name: Build APK
-#           command: |
-#             cd android
-#             chmod +x gradlew
-#             ./gradlew assembleRelease
-
-#       - store_artifacts:
-#           path: android/app/build/outputs/apk/release/
-#           destination: release-apk/
-
-# workflows:
-#   version: 2
-#   build:
-#     jobs:
-#       - build
-
-
-
-
-
-
-
-
-
-# This is a sample CircleCI configuration file for building an Android APK in a React Native project
-
-version: 2.1
-
+version: 2
 jobs:
   build:
     docker:
-      - image: circleci/android:api-30-node
-
-    working_directory: ~/react-native-app
+      - image: circleci/node:16
 
     steps:
       - checkout
 
-      # Restore node modules
+      - run:
+          name: Set Android SDK Location
+          command: |
+            echo 'export ANDROID_HOME=/opt/android' >> $BASH_ENV
+            echo 'export PATH="$ANDROID_HOME/tools:$PATH:$ANDROID_HOME/platform-tools"' >> $BASH_ENV
+            source $BASH_ENV
+
+      - run:
+          name: Check Node.js Version
+          command: node -v
+
+      - run:
+          name: Clear npm Cache
+          command: npm cache clean --force
+
+      - run:
+          name: Install Java
+          command: |
+            sudo apt-get update
+            sudo apt-get install default-jdk -y
+            echo 'export JAVA_HOME=/usr/lib/jvm/default-java' >> $BASH_ENV
+            echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
+
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
       - run:
           name: Install Dependencies
-          command: npm install
+          command: |
+            npm install --verbose
+            npm install react-native --verbose
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # Prepare Android environment
       - run:
-          name: Setup Android SDK
-          command: echo y | sdkmanager "platforms;android-30" "build-tools;30.0.2"
+          name: Set local.properties
+          command: |
+            if [ ! -f android/local.properties ]; then
+              echo 'sdk.dir=/opt/android' > android/local.properties
+              echo 'Local properties file created. Please specify the SDK location by setting sdk.dir=/path/to/android/sdk in this file.' >&2
+            fi
 
-      # Build APK
       - run:
           name: Build APK
-          command: npm run android:build
+          command: |
+            cd android
+            chmod +x gradlew
+            ./gradlew assembleRelease
 
-      # Store APK artifacts
       - store_artifacts:
-          path: $HOME/react-native-app/android/app/build/outputs/apk/release/
-          destination: apk
+          path: android/app/build/outputs/apk/release/
+          destination: release-apk/
 
 workflows:
   version: 2
   build:
     jobs:
       - build
+
+
+
+
+
+
+
+
