@@ -12,10 +12,11 @@ buildscript {
     }
     repositories {
         google()
+        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
-        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath "com.android.tools.build:gradle:4.1.0" // Replace with the latest version of Android Gradle Plugin
+        classpath "com.facebook.react:react-native-gradle-plugin:3.0.0" // Replace with the latest version of React Native Gradle Plugin
     }
 }
