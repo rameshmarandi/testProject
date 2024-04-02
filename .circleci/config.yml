@@ -19,17 +19,17 @@ jobs:
               echo 'Local properties file created. SDK location set to /opt/android.' >&2
             fi
 
-      # Check if native_modules.gradle file exists, if not, create it
-      - run:
-          name: Check and Create native_modules.gradle
-          command: |
-            if [ ! -f node_modules/@react-native-community/cli-platform-android/native_modules.gradle ]; then
-              echo 'File not found. Creating native_modules.gradle...'
-              mkdir -p node_modules/@react-native-community/cli-platform-android
-              echo '// This file is intentionally left blank.' > node_modules/@react-native-community/cli-platform-android/native_modules.gradle
-            else
-              echo 'native_modules.gradle file found.'
-            fi
+      # # Check if native_modules.gradle file exists, if not, create it
+      # - run:
+      #     name: Check and Create native_modules.gradle
+      #     command: |
+      #       if [ ! -f node_modules/@react-native-community/cli-platform-android/native_modules.gradle ]; then
+      #         echo 'File not found. Creating native_modules.gradle...'
+      #         mkdir -p node_modules/@react-native-community/cli-platform-android
+      #         echo '// This file is intentionally left blank.' > node_modules/@react-native-community/cli-platform-android/native_modules.gradle
+      #       else
+      #         echo 'native_modules.gradle file found.'
+      #       fi
 
       # Remaining steps...
       - run:
