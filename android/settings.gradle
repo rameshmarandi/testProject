@@ -2,7 +2,7 @@
 
 rootProject.name = 'RNTest'
 
-// Check if applyNativeModulesSettingsGradle method is defined before applying
+// Check if settingsDir property is defined before applying native modules settings
 def applyNativeModulesSettingsGradleMethod = {
     try {
         apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
@@ -13,8 +13,8 @@ def applyNativeModulesSettingsGradleMethod = {
     }
 }
 
-// Apply native modules settings if available
-if (project.hasProperty("settingsDir")) {
+// Apply native modules settings if settingsDir property is available
+if (settingsDir != null) {
     applyNativeModulesSettingsGradleMethod()
 } else {
     // In case settingsDir property is not available yet, defer applying settings
