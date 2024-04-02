@@ -73,17 +73,22 @@
 #       - build
 
 
-
 version: 2.1
 
 orbs:
- android: circleci/android@0.2.0
+  android: circleci/android@0.2.0
 
 jobs:
- build:
-   executor: android/android
+  build:
+    executor: android/android
 
-   steps:
-     - checkout
-     - run:
-         command: ./gradlew build
+    steps:
+      - checkout
+      - run:
+          name: Determine Project Directory
+          command: |
+            PROJECT_DIR=$(dirname $(realpath $0))
+            echo "export PROJECT_DIR=$PROJECT_DIR" >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          command: $PROJECT_DIR/gradlew build
